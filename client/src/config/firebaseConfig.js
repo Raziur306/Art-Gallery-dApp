@@ -1,14 +1,15 @@
 import { initializeApp } from "firebase/app";
 
 
+
 const app = initializeApp({
-    apiKey: "AIzaSyADKK1K7euk5w802mZeSr3vcdDl9MGPOTE",
-    authDomain: "art-gallery-3cd31.firebaseapp.com",
-    projectId: "art-gallery-3cd31",
-    storageBucket: "art-gallery-3cd31.appspot.com",
-    messagingSenderId: "70667740093",
-    appId: "1:70667740093:web:b8bc20929f65a41d4368d4",
-    measurementId: "G-488JKVTMCG"
+    apiKey: process.env.REACT_APP_API_KEY,
+    authDomain: process.env.REACT_APP_AUTHDOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGE_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 });
 
 export default app

@@ -1,21 +1,22 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, SignIn, SignUp, Error, Forget } from './pages';
+import Routes from './routes/index'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-//firebase auth
+//firebase initialization
 import './config/firebaseConfig'
 
 function App() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            localStorage.setItem('isLoggedIn', true)
+        } else {
+            localStorage.clear()
+        }
+    });
+
     return (
-        <BrowserRouter >
-            <Routes>
-                <Route path='/' element={<SignIn />} />
-                <Route path='/sign_up' element={<SignUp />} />
-                <Route path='/dashboard' exact element={<Home />} />
-                <Route path='/password_reset' exact element={<Forget />} />
-                <Route path='*' element={<Error />} />
-            </Routes>
-        </BrowserRouter>
+        <Routes />
     )
 }
 

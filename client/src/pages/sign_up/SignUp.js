@@ -3,11 +3,14 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import './signUp.css'
 
 
+
 function SignUp() {
+  const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -18,11 +21,13 @@ function SignUp() {
   const [nameError, setNameError] = useState(false)
   const [emailError, setEmailError] = useState(false)
   const [passError, setPassError] = useState(false)
+  const [processStatus, setProcessStatus] = useState(false)
 
 
 
 
   const handleSignUpClick = () => {
+    setProcessStatus(true)
     const { name, email, password, confirm_password } = userInfo
     if (!name && name.length < 3) {
       setNameError(true)
@@ -34,21 +39,21 @@ function SignUp() {
       setPassError(true)
     }
 
+
+
     const auth = getAuth();
-
-    console.log(email + password)
-
-    createUserWithEmailAndPassword(auth, email.toString, password.toString)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
 
         console.log(user)
 
+        navigate('/')
 
-        // ...
       })
       .catch((error) => {
+        setProcessStatus(false)
         const errorMessage = error.message;
         console.log(errorMessage)
       });
@@ -69,7 +74,7 @@ function SignUp() {
 
 
   return (
-    <Grid >
+    <Grid style={{ pointerEvents: processStatus ? "none" : "auto" }}>
       <Paper elevation={10} sx={{ padding: '20px', height: '50vh', width: '300px', margin: '100px auto' }} justifyContent={'center'} alignContent={"center"}>
         <Box fullWidth justifyContent={'center'} alignContent={'center'} alignItems={'center'} display={'flex'}>
           <Avatar sx={{ mb: '10px', bgcolor: 'green', justifyContent: 'center' }} ><LockOpenOutlinedIcon /></Avatar>
