@@ -1,0 +1,29 @@
+.sign-in-btn {
+    background: blue !important;
+    color: white !important;
+    margin-top: 10px !important;
+}
+
+.sign-in-btn:hover {
+    background: rgba(0, 0, 255, 0.654) !important;
+}
+
+.sign-up-suggestion {
+    max-width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.sign-up-link {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.sign-up-link:active {
+    color: green;
+}
+
+.forget-password-link {
+    color: red;
+    margin: 10px;
+}
