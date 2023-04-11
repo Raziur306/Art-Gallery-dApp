@@ -1,9 +1,10 @@
 import { Avatar, Box, Button, Grid, Paper, TextField } from '@mui/material'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Await, Link } from 'react-router-dom'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { contract } from '../../config/ContractConfig'
 
 import './signUp.css'
 
@@ -43,12 +44,12 @@ function SignUp() {
 
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in 
         const user = userCredential.user;
 
         console.log(user)
-
+        await contract.createUser(userInfo.name, user.uid);
         navigate('/')
 
       })

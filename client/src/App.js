@@ -1,4 +1,3 @@
-import React from 'react'
 import Routes from './routes/index'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -6,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import './config/firebaseConfig'
 
 function App() {
+
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {

@@ -93,3 +93,18 @@
     cursor: pointer;
 
 }
+
+
+.upload-dialog-btn {
+    background-color: green !important;
+    color: white !important;
+    ;
+    height: 30px;
+    align-items: center;
+    margin-right: 20px !important;
+    ;
+}
+
+..upload-dialog-btn:hover {
+    background-color: rgba(0, 128, 0, 0.493);
+}

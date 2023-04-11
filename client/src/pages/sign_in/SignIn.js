@@ -6,8 +6,6 @@ import './signIn.css'
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
-
-
 function SignIn() {
   const [error, setError] = useState(false)
   const navigate = useNavigate()
@@ -32,7 +30,6 @@ function SignIn() {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, userInfo.email, userInfo.password)
       .then((userCredential) => {
-        console.log(userCredential.user)
         navigate('/dashboard')
       })
       .catch((error) => {
