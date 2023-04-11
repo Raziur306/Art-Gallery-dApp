@@ -1,16 +1,17 @@
 import { Avatar, Box, Button, Grid, Paper, TextField } from '@mui/material'
 import React, { useState } from 'react'
-import { Await, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { contract } from '../../config/ContractConfig'
+
 
 import './signUp.css'
 
 
+const SignUp = ({ state }) => {
+  const { contract } = state;
 
-function SignUp() {
   const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -62,8 +63,6 @@ function SignUp() {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target
-
-
     setUserInfo({
       ...userInfo,
       [name]: value
@@ -96,8 +95,9 @@ function SignUp() {
           <text className='sign-up-suggestion'>Already have an account?<Link className='sign-in-link' to={'/'}> Sign In</Link></text>
         </Box>
       </Paper>
-    </Grid >
-  )
+    </Grid >)
+
+
 }
 
 export default SignUp

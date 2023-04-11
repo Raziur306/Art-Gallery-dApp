@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home, SignIn, SignUp, Error, Forget } from '../pages';
 import Protected from './Protected';
@@ -6,8 +6,52 @@ import ProtectDashboard from './ProtectDashboard';
 
 
 
+import { ethers } from 'ethers';
+import abi from '../contract/GalleryContract.json'
+
 
 const Index = () => {
+
+    const [state, setState] = useState({
+        provider: null,
+        signer: null,
+        contract: null,
+    });
+
+    useEffect(() => {
+
+        const connectWallet = async () => {
+
+            const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+            const contractABI = abi.abi;
+            try {
+                const { ethereum } = window;
+                if (ethereum) {
+                    const account = await ethereum.request({ method: "eth_requestAccounts" });
+                }
+
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                setState({
+                    ...state,
+                    provider,
+                    signer,
+                    contract,
+                })
+
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        connectWallet()
+    }, [])
+
+
+
     return <BrowserRouter >
         <Routes>
             <Route path='/' element={<Protected >
@@ -16,13 +60,13 @@ const Index = () => {
 
 
             <Route path='/sign_up' element={<Protected>
-                <SignUp />
+                <SignUp state={state} />
             </Protected>} />
 
 
             <Route path='/dashboard' exact element={
                 <ProtectDashboard>
-                    <Home />
+                    <Home state={state} />
                 </ProtectDashboard>
             } />
 

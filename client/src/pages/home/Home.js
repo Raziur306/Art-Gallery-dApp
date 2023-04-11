@@ -8,14 +8,13 @@ import { useNavigate } from "react-router-dom";
 import app from '../../config/firebaseConfig'
 import { v4 } from "uuid";
 import { getStorage, ref, uploadBytes, getDownloadURL, } from "firebase/storage";
-import { contract } from '../../config/ContractConfig'
 
 
 
 
 
-const Home = async () => {
-
+const Home = async ({ state }) => {
+    const {contract} = state;
     const allUser = await contract.getAllUser();
 
 
