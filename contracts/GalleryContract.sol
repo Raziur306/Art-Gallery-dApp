@@ -2,22 +2,39 @@
 pragma solidity >=0.4.16 <0.9.0;
 
 contract GalleryContract {
+    struct Image {
+        string url;
+        string title;
+        string description;
+    }
+
     struct UserData {
         string name;
         string uid;
-        string[] imageList;
+        Image[] imageList;
     }
 
     UserData[] users;
 
     function createUser(string memory name, string memory uid) public {
-        users.push(UserData(name, uid, new string[](0)));
+        UserData storage newUser = users.push();
+        newUser.name = name;
+        newUser.uid = uid;
+        users.push(newUser);
     }
 
-    function uploadedImage(string memory url, string memory uid) public {
+    function uploadedImage(
+        string memory title,
+        string memory description,
+        string memory url,
+        string memory uid
+    ) public {
         for (uint i = 0; i < users.length; i++) {
-            if ( keccak256(abi.encodePacked(users[i].uid)) == keccak256(abi.encodePacked(uid))) {
-                users[i].imageList.push(url);
+            if (
+                keccak256(abi.encodePacked(users[i].uid)) ==
+                keccak256(abi.encodePacked(uid))
+            ) {
+                users[i].imageList.push(Image(url, title, description));
                 return;
             }
         }
@@ -28,7 +45,9 @@ contract GalleryContract {
         return users;
     }
 
-    function getCurrentUser(string memory uid) public view returns (UserData memory) {
+    function getCurrentUser(
+        string memory uid
+    ) public view returns (UserData memory) {
         for (uint i = 0; i < users.length; i++) {
             if (
                 keccak256(abi.encodePacked(users[i].uid)) ==
