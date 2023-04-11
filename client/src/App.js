@@ -9,7 +9,8 @@ function App() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            localStorage.setItem('isLoggedIn', true)
+            localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('uid', user.uid);
         } else {
             localStorage.clear()
         }

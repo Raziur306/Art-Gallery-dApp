@@ -22,7 +22,7 @@ const Index = () => {
 
         const connectWallet = async () => {
 
-            const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+            const contractAddress = "0x8Ac8BC6666f99EDb42fEaad87367C59566551468";
             const contractABI = abi.abi;
             try {
                 const { ethereum } = window;
@@ -30,9 +30,9 @@ const Index = () => {
                     const account = await ethereum.request({ method: "eth_requestAccounts" });
                 }
 
-                const provider = new ethers.providers.Web3Provider(ethereum);
-                const signer = provider.getSigner();
-                const contract = new ethers.Contract(contractAddress, contractABI, signer);
+                const provider = await new ethers.providers.Web3Provider(ethereum);
+                const signer = await provider.getSigner();
+                const contract = await new ethers.Contract(contractAddress, contractABI, signer);
 
                 setState({
                     ...state,

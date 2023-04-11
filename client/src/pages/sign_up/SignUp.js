@@ -10,7 +10,6 @@ import './signUp.css'
 
 
 const SignUp = ({ state }) => {
-  const { contract } = state;
 
   const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({
@@ -25,7 +24,13 @@ const SignUp = ({ state }) => {
   const [passError, setPassError] = useState(false)
   const [processStatus, setProcessStatus] = useState(false)
 
-
+  const handleOnChange = (e) => {
+    const { name, value } = e.target
+    setUserInfo({
+      ...userInfo,
+      [name]: value
+    })
+  }
 
 
   const handleSignUpClick = () => {
@@ -45,29 +50,27 @@ const SignUp = ({ state }) => {
 
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
+      .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
+        saveToBlockChain(user.uid)
 
-        console.log(user)
-        await contract.createUser(userInfo.name, user.uid);
-        navigate('/')
 
       })
       .catch((error) => {
         setProcessStatus(false)
-        const errorMessage = error.message;
-        console.log(errorMessage)
       });
   }
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target
-    setUserInfo({
-      ...userInfo,
-      [name]: value
-    })
+
+  //saving user to blockchain
+  const saveToBlockChain = async (uid) => {
+    const { contract } = state;
+    await contract.createUser(userInfo.name, uid);
+    setProcessStatus(false)
+    navigate('/')
   }
+
 
 
 
@@ -85,10 +88,10 @@ const SignUp = ({ state }) => {
         </Box>
 
 
-        <TextField onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={nameError} name='name' sx={{ mt: '10px' }} label="Name" type='name' fullWidth required placeholder='Enter your full name' />
-        <TextField onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={emailError} name='email' sx={{ mt: '10px' }} label="Email" fullWidth required placeholder='Enter your email' />
-        <TextField onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={passError} name='password' sx={{ mt: '10px' }} label="Password" required type='password' fullWidth placeholder='Enter your password' />
-        <TextField onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={passError} name='confirm_password' sx={{ mt: '10px' }} label="Confirm Password" required type='password' fullWidth placeholder='Re-write your password' />
+        <TextField value={userInfo.name} onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={nameError} name='name' sx={{ mt: '10px' }} label="Name" type='name' fullWidth required placeholder='Enter your full name' />
+        <TextField value={userInfo.email} onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={emailError} name='email' sx={{ mt: '10px' }} label="Email" fullWidth required placeholder='Enter your email' />
+        <TextField value={userInfo.password} onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={passError} name='password' sx={{ mt: '10px' }} label="Password" required type='password' fullWidth placeholder='Enter your password' />
+        <TextField value={userInfo.confirm_password} onChange={handleOnChange} helperText={nameError && "Can't be emtpy"} error={passError} name='confirm_password' sx={{ mt: '10px' }} label="Confirm Password" required type='password' fullWidth placeholder='Re-write your password' />
         <Button onClick={handleSignUpClick} helperText={nameError && "Can't be emtpy"} className='sign-up-btn' required fullWidth>Sign Up</Button>
 
         <Box display={'flex'} alignContent={'center'} justifyContent={'center'}>
