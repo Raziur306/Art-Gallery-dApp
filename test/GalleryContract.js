@@ -34,9 +34,17 @@ describe('Gallery Contract', () => {
     it('Save image url & get image url', async () => {
         const { GalleryContract, hardhatGallery } = await loadFixture(deployCoffeeFixture);
         await hardhatGallery.createUser(name, uid)
+
+        //save images
         await hardhatGallery.uploadedImage(title, description, url, uid)
+        await hardhatGallery.uploadedImage("Second image title", "second image description", "image url", uid)
+
+
         const user = await hardhatGallery.getCurrentUser(uid);
         expect(user.imageList[0].url).to.equal(url);
+        expect(user.imageList[1].url).to.equal("image url");
+
+
     });
 
 
