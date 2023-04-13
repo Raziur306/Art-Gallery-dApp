@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import ImageCard from '../../components/ImageCard'
 import CloseIcon from '@mui/icons-material/Close';
 import './home.css'
@@ -13,14 +13,15 @@ import { getStorage, ref, uploadBytes, getDownloadURL, } from "firebase/storage"
 
 
 
-const Home = async ({ state }) => {
-    const {contract} = state;
-    const allUser = await contract.getAllUser();
+const Home = ({ state }) => {
+
+
+    const [allUser, setAllUser] = useState([]);
+    const { contract } = state;
+
 
 
     const auth = getAuth();
-    const uid = auth.currentUser.uid;
-
 
     const navigate = useNavigate()
 
@@ -77,25 +78,43 @@ const Home = async ({ state }) => {
         setImageDetail({ ...imageDetail, [e.target.name]: e.target.value })
     }
 
-    const handleOnImageUpload = async () => {
+    const handleOnImageUpload = () => {
         if (!imageDetail.title || !imageDetail.description) {
             return setFileDetailError(true);
         }
 
         // upload image to firebase
         const storage = getStorage(app);
-
         const imageRef = ref(storage, `images/${selectedFile.name + v4()}`);
-        await uploadBytes(imageRef, selectedFile).then(async (snapshot) => {
+        uploadBytes(imageRef, selectedFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
-                setImageDetail({ ...imageDetail, url })
+                setImageDetail({ ...imageDetail, url });
+                console.log(url);
+                saveImageToBlockchain();
             });
         });
 
-        const { title, description, url } = imageDetail();
-        await contract.uploadedImage(title, description, url, uid);
+
+
+    }
+
+
+    const saveImageToBlockchain = async () => {
+        const { title, description, url } = imageDetail;
+        await contract.uploadedImage(title, description, url, localStorage.getItem('uid'));
         setDialog(false);
     }
+
+    useEffect(() => {
+        const getUser = async () => {
+            const result = await contract.getAllUser();
+            console.log(result);
+            setAllUser(result);
+        }
+        contract && getUser();
+
+
+    }, [contract]);
 
 
 
@@ -118,11 +137,11 @@ const Home = async ({ state }) => {
                 </Box>
 
                 <Grid container gap={3}>
-                    {allUser.map((user, index) => {
-                        return user.imageList.map((image, index) => {
-                            return <Grid item onClick={() => handleOnImageClicked(image.url)} ><ImageCard key={image.id} url={image.url} /></Grid>
-                        })
-                    }
+                    {allUser && allUser.map((user, index) =>
+                        user.imageList.map((image, index) =>
+                            <Grid key={index} item onClick={() => handleOnImageClicked(image.url)} ><ImageCard key={image.id} url={image.url} /></Grid>
+                        )
+
                     )}
                 </Grid>
             </div>

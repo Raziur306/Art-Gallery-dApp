@@ -22,7 +22,7 @@ const Index = () => {
 
         const connectWallet = async () => {
 
-            const contractAddress = "0x8Ac8BC6666f99EDb42fEaad87367C59566551468";
+            const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
             const contractABI = abi.abi;
             try {
                 const { ethereum } = window;
